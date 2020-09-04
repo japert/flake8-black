@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -eu pipefail
 IFS=$'\n\t'
 
 # Assumes in the tests/ directory
@@ -34,6 +34,9 @@ flake8 --select BLK non_conflicting_configurations/*.py
 flake8 --select BLK conflicting_configurations/*.py
 # Here using --black-config '' meaning ignore any (bad) pyproject.toml files:
 flake8 --select BLK with_bad_toml/hello_world.py --black-config ''
+
+echo "Checking non-standard pyproject.toml is being found relative to .flake8 file"
+flake8 --config with_pyproject_toml_in_flake8_config/.flake8 --select BLK with_pyproject_toml_in_flake8_config/*.py
 
 echo "Checking we report expected black changes"
 diff test_changes/hello_world.txt <(flake8 --select BLK test_changes/hello_world.py)
