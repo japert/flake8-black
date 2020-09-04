@@ -132,6 +132,7 @@ class BlackStyleChecker:
             # https://gitlab.com/pycqa/flake8/issues/562
             # https://gitlab.com/pycqa/flake8/merge_requests/337
             parse_from_config=True,
+            normalize_paths=True,
             help="Path to black TOML configuration file (overrides the "
             "default 'pyproject.toml' detection; use empty string '' to mean "
             "ignore all 'pyproject.toml' files).",
@@ -150,13 +151,7 @@ class BlackStyleChecker:
             cls.override_config = black_config[None]  # explicitly use defaults
             return
 
-        # Validate the path setting - handling relative paths ourselves,
-        # see https://gitlab.com/pycqa/flake8/issues/562
         black_config_path = Path(options.black_config)
-        if options.config:
-            # Assume black config path was via flake8 config file
-            base_path = Path(path.dirname(path.abspath(options.config)))
-            black_config_path = base_path / black_config_path
         if not black_config_path.is_file():
             # Want flake8 to abort, see:
             # https://gitlab.com/pycqa/flake8/issues/559
